@@ -44,6 +44,17 @@ function initialize(){
     }
 }
 
+document.addEventListener('keydown',e =>{
+    if(e.key === 'Control'){
+        clickmodebtn.checked = true;
+    }
+})
+document.addEventListener('keyup',e =>{
+    if(e.key === 'Control'){
+        clickmodebtn.checked = false;
+    }
+})
+
 // créers les bombes
 function createBombs(clickx,clicky){
     time.s =0;
@@ -124,12 +135,16 @@ function bombClick(x,y){
             shootedCell.classList.add('miss');
             bombesCounter --;
         }else{
-            shootedCell.classList.remove    ('miss');
+            shootedCell.classList.remove('miss');
             bombesCounter ++;
         }
         const shootedPosition = bombs.find(obj => obj.x === x && obj.y === y);
         shootedPosition.marked = !shootedPosition.marked;
     }else{
+        const shootedCell = document.getElementById(`cell-${x}-${y}`);
+        if(shootedCell.classList.contains('miss')){
+            return;
+        }
         looseGame();
     }
     refreshGameStatus();
@@ -159,6 +174,7 @@ function looseGame(){
 
 function winGame(){
     started = false;
+    save(time.m, time.s);
     overlay.style.display = 'block';
     const cells = Array.from(document.getElementsByClassName('cell'));
     cells.forEach(element => {
@@ -206,15 +222,29 @@ function getRandomInt(min, max) {
 // Affichage Text 
 function textRefresh(){
     text.innerHTML = `Bombe(s) restante(s) : ${bombesCounter}<br>
-    Timer  ${time.m.toFixed(0)}.${time.s.toFixed(2)}`;
+    Timer  ${time.m.toFixed(0)}.${time.s.toFixed(2)} Best : ${data?.m || 0}.${data?.s || 0}`;
 }
 
 function refreshChrono(){
     if(started){
         time.s += 0.1;
     }
-    if(time.s >= 60) time.m ++;
+    if(time.s >= 60) {
+        time.s =0;
+        time.m ++;
+    }
     textRefresh();
+}
+
+function save(m,s){
+    if(data){
+        if(data.m < m) data = {m : m, s : s};
+        localStorage.setItem("demineurData", JSON.stringify(data));
+    }else{
+        const firstdata = {m : m, s : s};
+        localStorage.setItem("demineurData", JSON.stringify(firstdata));
+    }
+    data = JSON.parse(localStorage.getItem("demineurData"));
 }
 
 setInterval(refreshChrono, 100);
