@@ -98,13 +98,10 @@ function canExist(x,y){
 function clickCell(x,y){
     if(!started){
         createBombs(x,y);
-        console.log(bombs);
     }
     if(canExist(x,y)){
-        console.log('nobomb');
         noBomb(x,y);
     }else{
-        console.log('bomb');
         bombClick(x,y);
     }
     textRefresh();
@@ -197,7 +194,6 @@ function revealBomb(x,y){
             }
         }
     }
-    console.log(bombsNear);
     if(bombsNear === 0){
         for(let i = -1; i < 2 ; i++){
             for(let j = -1; j<2 ; j++){
