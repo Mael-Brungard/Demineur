@@ -2,16 +2,18 @@ let data = JSON.parse(localStorage.getItem("snakeData"));
 
 document.addEventListener('DOMContentLoaded', () => {
     initialize();
-    data = JSON.parse(localStorage.getItem("snakeData"));
+    data = JSON.parse(localStorage.getItem("demineurData"));
     textRefresh();
 });
 
 // Données modifiable
 const rows = 15;
 const cols = 15;
-let bombesCounter = 50;
+const bombesCounterSettings = 50;
 
 // Ne pas toucher
+let time = {s:0, m:0};
+let bombesCounter = bombesCounterSettings;
 let started = false;
 const overlay = document.getElementById("overlay");
 const text = document.getElementById('text');
@@ -44,7 +46,10 @@ function initialize(){
 
 // créers les bombes
 function createBombs(clickx,clicky){
+    time.s =0;
+    time.m = 0;
     bombs = [];
+    bombesCounter = bombesCounterSettings;
     for(let b=0;b<bombesCounter;b++){
         let error = true;
         let tryposition;
@@ -200,5 +205,16 @@ function getRandomInt(min, max) {
 
 // Affichage Text 
 function textRefresh(){
-    text.innerHTML = `Bombe(s) restante(s) : ${bombesCounter}`;
+    text.innerHTML = `Bombe(s) restante(s) : ${bombesCounter}<br>
+    Timer  ${time.m.toFixed(0)}.${time.s.toFixed(2)}`;
 }
+
+function refreshChrono(){
+    if(started){
+        time.s += 0.1;
+    }
+    if(time.s >= 60) time.m ++;
+    textRefresh();
+}
+
+setInterval(refreshChrono, 100);
