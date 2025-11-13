@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Données modifiable
 const rows = 15;
 const cols = 15;
-const bombesCounterSettings = 50;
+const bombesCounterSettings = 40;
 
 // Ne pas toucher
 let time = {s:0, m:0};
