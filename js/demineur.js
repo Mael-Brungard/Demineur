@@ -12,7 +12,7 @@ const cols = 15;
 const bombesCounterSettings = 40;
 
 // Ne pas toucher
-let time = {s:0, m:0};
+let time = { s: 0, m: 0 };
 let bombesCounter = bombesCounterSettings;
 let started = false;
 const overlay = document.getElementById("overlay");
@@ -22,7 +22,7 @@ let noBombs = [];
 let bombs = [];
 
 // Création du terrain
-function initialize(){
+function initialize() {
     const grid = document.getElementById("grid");
 
     for (let r = 0; r < rows; r++) {
@@ -35,7 +35,7 @@ function initialize(){
             cell.dataset.row = r;
             cell.dataset.col = c;
             cell.addEventListener('click', () => {
-                clickCell(c,r);
+                clickCell(c, r);
             })
             row.appendChild(cell);
         }
@@ -44,102 +44,102 @@ function initialize(){
     }
 }
 
-document.addEventListener('keydown',e =>{
-    if(e.key === 'Control'){
+document.addEventListener('keydown', e => {
+    if (e.key === 'Control') {
         clickmodebtn.checked = true;
     }
 })
-document.addEventListener('keyup',e =>{
-    if(e.key === 'Control'){
+document.addEventListener('keyup', e => {
+    if (e.key === 'Control') {
         clickmodebtn.checked = false;
     }
 })
 
 // créers les bombes
-function createBombs(clickx,clicky){
-    time.s =0;
+function createBombs(clickx, clicky) {
+    time.s = 0;
     time.m = 0;
     bombs = [];
     bombesCounter = bombesCounterSettings;
-    for(let b=0;b<bombesCounter;b++){
+    for (let b = 0; b < bombesCounter; b++) {
         let error = true;
         let tryposition;
-        while(error){
+        while (error) {
             tryposition = {};
-            const x = getRandomInt(0,rows-1) ;
-            const y = getRandomInt(0,cols-1);
+            const x = getRandomInt(0, rows - 1);
+            const y = getRandomInt(0, cols - 1);
             error = false;
-            if(!canExist(x, y) || (x >= clickx - 1 && x <= clickx + 1 && y >= clicky - 1 && y <= clicky + 1)){
+            if (!canExist(x, y) || (x >= clickx - 1 && x <= clickx + 1 && y >= clicky - 1 && y <= clicky + 1)) {
                 error = true;
                 continue;
             }
-            tryposition = {marked:false,x: x,y: y};
+            tryposition = { marked: false, x: x, y: y };
             break;
-            
+
         }
         bombs.push(tryposition);
     }
-    
+
     started = true;
 }
 
-function canExist(x,y){
-    for(let bomb of bombs){
+function canExist(x, y) {
+    for (let bomb of bombs) {
         const positionx = bomb.x;
         const positiony = bomb.y;
-        if(x === positionx && y === positiony){
+        if (x === positionx && y === positiony) {
             return false;
-        } 
+        }
     }
     return true;
 }
 
 // Tirer sur une case
-function clickCell(x,y){
-    if(!started){
-        createBombs(x,y);
+function clickCell(x, y) {
+    if (!started) {
+        createBombs(x, y);
     }
-    if(canExist(x,y)){
-        noBomb(x,y);
-    }else{
-        bombClick(x,y);
+    if (canExist(x, y)) {
+        noBomb(x, y);
+    } else {
+        bombClick(x, y);
     }
     textRefresh();
     refreshGameStatus();
 }
 
-function noBomb(x,y){
+function noBomb(x, y) {
     const shootedCell = document.getElementById(`cell-${x}-${y}`);
-    if(shootedCell.classList.contains('reveal')) return;
-    if(clickmodebtn.checked){
-        if(!shootedCell.classList.contains('miss')){
+    if (shootedCell.classList.contains('reveal')) return;
+    if (clickmodebtn.checked) {
+        if (!shootedCell.classList.contains('miss')) {
             shootedCell.classList.add('miss');
-            bombesCounter --;
-        }else{
-            shootedCell.classList.remove    ('miss');
-            bombesCounter ++;
+            bombesCounter--;
+        } else {
+            shootedCell.classList.remove('miss');
+            bombesCounter++;
         }
-    }else{
+    } else {
         shootedCell.classList.add('reveal');
-        revealBomb(x,y);
+        revealBomb(x, y);
     }
 }
 
-function bombClick(x,y){
-    if(clickmodebtn.checked){
+function bombClick(x, y) {
+    if (clickmodebtn.checked) {
         const shootedCell = document.getElementById(`cell-${x}-${y}`);
-        if(!shootedCell.classList.contains('miss')){
+        if (!shootedCell.classList.contains('miss')) {
             shootedCell.classList.add('miss');
-            bombesCounter --;
-        }else{
+            bombesCounter--;
+        } else {
             shootedCell.classList.remove('miss');
-            bombesCounter ++;
+            bombesCounter++;
         }
         const shootedPosition = bombs.find(obj => obj.x === x && obj.y === y);
         shootedPosition.marked = !shootedPosition.marked;
-    }else{
+    } else {
         const shootedCell = document.getElementById(`cell-${x}-${y}`);
-        if(shootedCell.classList.contains('miss')){
+        if (shootedCell.classList.contains('miss')) {
             return;
         }
         looseGame();
@@ -147,17 +147,17 @@ function bombClick(x,y){
     refreshGameStatus();
 }
 
-function refreshGameStatus(){
+function refreshGameStatus() {
     let win = true;
-    for(let bomb of bombs){
-        if(!bomb.marked){
-            win = false; 
+    for (let bomb of bombs) {
+        if (!bomb.marked) {
+            win = false;
         }
     }
-    if(win && bombesCounter ===0) winGame();
+    if (win && bombesCounter === 0) winGame();
 }
 
-function looseGame(){
+function looseGame() {
     started = false;
     text.innerHTML = 'You Loose !';
     const cells = Array.from(document.getElementsByClassName('cell'));
@@ -169,9 +169,9 @@ function looseGame(){
     });
 }
 
-function winGame(){
+function winGame() {
     started = false;
-    save(time.m, time.s);
+    save(time.m.toFixed(0), time.s.toFixed(2));
     overlay.style.display = 'block';
     const cells = Array.from(document.getElementsByClassName('cell'));
     cells.forEach(element => {
@@ -183,29 +183,29 @@ function winGame(){
     text.innerHTML = `Vous avez gagné !!!`;
 }
 
-function revealBomb(x,y){
+function revealBomb(x, y) {
     let bombsNear = 0;
     const Cell = document.getElementById(`cell-${x}-${y}`);
     Cell.classList.add('reveal');
-    for(let i = -1; i < 2 ; i++){
-        for(let j = -1; j<2 ; j++){
-            if(!canExist(x+i,y+j)){
-                bombsNear ++;
+    for (let i = -1; i < 2; i++) {
+        for (let j = -1; j < 2; j++) {
+            if (!canExist(x + i, y + j)) {
+                bombsNear++;
             }
         }
     }
-    if(bombsNear === 0){
-        for(let i = -1; i < 2 ; i++){
-            for(let j = -1; j<2 ; j++){
-                if(canExist(x+i,y+j)){
-                    const nearCells = document.getElementById(`cell-${x+i}-${y+j}`);
-                    if(!nearCells) continue;
-                    if(nearCells.classList.contains('reveal')) continue;
-                    revealBomb(x+i,y+j)
+    if (bombsNear === 0) {
+        for (let i = -1; i < 2; i++) {
+            for (let j = -1; j < 2; j++) {
+                if (canExist(x + i, y + j)) {
+                    const nearCells = document.getElementById(`cell-${x + i}-${y + j}`);
+                    if (!nearCells) continue;
+                    if (nearCells.classList.contains('reveal')) continue;
+                    revealBomb(x + i, y + j)
                 }
             }
         }
-    }else{
+    } else {
         Cell.innerHTML = `<span class="text-light text-center h-100 w-100 align-items-center">${bombsNear}</span>`
     }
 }
@@ -216,28 +216,28 @@ function getRandomInt(min, max) {
 }
 
 // Affichage Text 
-function textRefresh(){
+function textRefresh() {
     text.innerHTML = `Bombe(s) restante(s) : ${bombesCounter}<br>
-    Timer  ${time.m.toFixed(0)}.${time.s.toFixed(2)} Best : ${data?.m || 0}.${data?.s || 0}`;
+    Timer  ${time.m.toFixed(0)}.${time.s.toFixed(2)} Best : ${data?.m || 0}.${data?.s.toFixed(2) || 0}`;
 }
 
-function refreshChrono(){
-    if(started){
+function refreshChrono() {
+    if (started) {
         time.s += 0.1;
     }
-    if(time.s >= 60) {
-        time.s =0;
-        time.m ++;
+    if (time.s >= 60) {
+        time.s = 0;
+        time.m++;
     }
     textRefresh();
 }
 
-function save(m,s){
-    if(data){
-        if(data.m < m) data = {m : m, s : s};
+function save(m, s) {
+    if (data) {
+        if (data.m < m) data = { m: m, s: s };
         localStorage.setItem("demineurData", JSON.stringify(data));
-    }else{
-        const firstdata = {m : m, s : s};
+    } else {
+        const firstdata = { m: m, s: s };
         localStorage.setItem("demineurData", JSON.stringify(firstdata));
     }
     data = JSON.parse(localStorage.getItem("demineurData"));
