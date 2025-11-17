@@ -109,8 +109,8 @@ function createBombs(clickx, clicky) {
         let tryposition;
         while (error) {
             tryposition = {};
-            const x = getRandomInt(0, rows - 1);
-            const y = getRandomInt(0, cols - 1);
+            const x = getRandomInt(0, cols - 1);
+            const y = getRandomInt(0, rows - 1);
             error = false;
             if (!canExist(x, y) || (x >= clickx - 1 && x <= clickx + 1 && y >= clicky - 1 && y <= clicky + 1)) {
                 error = true;
