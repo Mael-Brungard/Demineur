@@ -11,8 +11,10 @@ body {
 
 #text {
   position: fixed;
-  bottom: 0;
+  width: fit-content;
+  bottom: 20%;
   left: 0;
+  pointer-events: none;
 }
 
 h1 {

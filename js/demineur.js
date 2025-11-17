@@ -24,8 +24,12 @@ let hardmode = false;
 
 
 diffbtn.addEventListener('click', () => {
-    hardmode = !hardmode;
-    editGrid();
+    if (!started) {
+        hardmode = !hardmode;
+        editGrid();
+    } else {
+        diffbtn.checked = !diffbtn.checked;
+    }
 })
 function editGrid() {
     if (!started) {
