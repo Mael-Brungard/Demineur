@@ -7,19 +7,58 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Données modifiable
-const rows = 15;
-const cols = 15;
-const bombesCounterSettings = 40;
+let rows = 15;
+let cols = 15;
+let bombesCounterSettings = 40;
 
 // Ne pas toucher
 let time = { s: 0, m: 0 };
 let bombesCounter = bombesCounterSettings;
 let started = false;
-const overlay = document.getElementById("overlay");
 const text = document.getElementById('text');
 const clickmodebtn = document.getElementById('clickmode');
+const diffbtn = document.getElementById('difficultymode');
 let noBombs = [];
 let bombs = [];
+let hardmode = false;
+
+
+diffbtn.addEventListener('click', () => {
+    hardmode = !hardmode;
+    editGrid();
+})
+function editGrid() {
+    if (!started) {
+        if (hardmode) {
+            rows = 100;
+            cols = 20;
+            bombesCounterSettings = 400;
+        } else {
+            rows = 15;
+            cols = 15;
+            bombesCounterSettings = 45;
+        }
+        const grid = document.getElementById("grid");
+        grid.innerHTML = '';
+        for (let r = 0; r < rows; r++) {
+            const row = document.createElement("tr");
+
+            for (let c = 0; c < cols; c++) {
+                const cell = document.createElement("td");
+                cell.classList.add("cell");
+                cell.id = `cell-${c}-${r}`;
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                cell.addEventListener('click', () => {
+                    clickCell(c, r);
+                })
+                row.appendChild(cell);
+            }
+
+            grid.appendChild(row);
+        }
+    }
+}
 
 // Création du terrain
 function initialize() {
@@ -171,8 +210,7 @@ function looseGame() {
 
 function winGame() {
     started = false;
-    save(time.m.toFixed(0), time.s.toFixed(2));
-    overlay.style.display = 'block';
+    save(time.m, time.s);
     const cells = Array.from(document.getElementsByClassName('cell'));
     cells.forEach(element => {
         element.classList.remove('hit');
@@ -234,8 +272,10 @@ function refreshChrono() {
 
 function save(m, s) {
     if (data) {
-        if (data.m < m) data = { m: m, s: s };
-        localStorage.setItem("demineurData", JSON.stringify(data));
+        if (data.m < m) {
+            data = { m: m, s: s };
+            localStorage.setItem("demineurData", JSON.stringify(data));
+        }
     } else {
         const firstdata = { m: m, s: s };
         localStorage.setItem("demineurData", JSON.stringify(firstdata));

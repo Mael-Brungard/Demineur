@@ -11,14 +11,25 @@
     <body class="bg-dark">
         <div class="container w-100 d-flex justify-content-center align-items-center flex-column p-4">
             <h1 class="mb-4 text-light">Projet Démineur</h1>
-            <div class="difficulty text-light">
-                Safe
-                <label class="switch">
-                    <input id="clickmode" type="checkbox">
-                    <span class="slider"></span>
-                </label>
-                Bombe
+            <div class="switches">
+                <div class="gamemode switchbox text-light">
+                    Safe
+                    <label class="switch">
+                        <input id="clickmode" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    Bombe
+                </div>
+                <div class="difficulty switchbox text-light">
+                    classic
+                    <label class="switch">
+                        <input id="difficultymode" type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    HARDCORE
+                </div>
             </div>
+            
             <div class="d-flex justify-content-center align-items-center w-100">
                 <table id="grid"></table>
             </div>
